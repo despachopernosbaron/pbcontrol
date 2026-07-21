@@ -2,7 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+  >
+
   <title>Control Pedidos</title>
 
   <style>
@@ -10,7 +14,8 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       padding: 0;
       width: 100%;
@@ -34,27 +39,6 @@
       background: #eef2f7;
     }
 
-    .saved {
-      position: fixed;
-      left: 50%;
-      bottom: 22px;
-      transform: translateX(-50%);
-      background: #15803d;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 800;
-      box-shadow: 0 8px 24px rgba(15,23,42,.22);
-      display: none;
-      z-index: 9999;
-      white-space: nowrap;
-    }
-
-    .saved.show {
-      display: block;
-    }
-
     @supports (-webkit-touch-callout: none) {
       iframe {
         height: -webkit-fill-available;
@@ -66,66 +50,10 @@
 <body>
   <iframe
     id="appFrame"
+    src="https://script.google.com/macros/s/AKfycbyf973XQWJwIRURqQVBGGMQPfICkurYcHfLPQs6c1eNat22bo-hFdwna_i_uwhMldLX/exec"
     allow="camera; microphone; clipboard-read; clipboard-write"
     referrerpolicy="no-referrer-when-downgrade"
+    title="Control Pedidos"
   ></iframe>
-
-  <div id="savedMsg" class="saved">URL actualizada correctamente</div>
-
-  <script>
-    const URL_DEFAULT = "https://script.google.com/macros/s/AKfycbyK6-XiLIHPsA99FsO5kcN8PHoWRggeGqxc_-0g-Uqr7-mFrIYCuZLLmJN0hMhq8SRTkg/exec";
-    const STORAGE_KEY = "CONTROL_PEDIDOS_SCRIPT_URL_ACTIVA";
-
-    function esUrlValida(url) {
-      return /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/i.test(String(url || "").trim());
-    }
-
-    function obtenerUrlActiva() {
-      const guardada = localStorage.getItem(STORAGE_KEY);
-
-      if (esUrlValida(guardada)) {
-        return guardada;
-      }
-
-      return URL_DEFAULT;
-    }
-
-    function cargarApp() {
-      const iframe = document.getElementById("appFrame");
-      iframe.src = obtenerUrlActiva();
-    }
-
-    function mostrarMensajeGuardado() {
-      const msg = document.getElementById("savedMsg");
-      msg.classList.add("show");
-
-      setTimeout(() => {
-        msg.classList.remove("show");
-      }, 2500);
-    }
-
-    window.addEventListener("message", function(event) {
-      const data = event.data || {};
-
-      if (data.tipo !== "CONTROL_PEDIDOS_ACTUALIZAR_URL") {
-        return;
-      }
-
-      const nuevaUrl = String(data.url || "").trim();
-
-      if (!esUrlValida(nuevaUrl)) {
-        return;
-      }
-
-      localStorage.setItem(STORAGE_KEY, nuevaUrl);
-
-      const iframe = document.getElementById("appFrame");
-      iframe.src = nuevaUrl;
-
-      mostrarMensajeGuardado();
-    });
-
-    cargarApp();
-  </script>
 </body>
 </html>
